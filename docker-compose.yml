@@ -1,0 +1,31 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: tukula_api
+    volumes:
+      - .:/var/www
+    environment:
+      - DB_CONNECTION=pgsql
+      - DB_HOST=postgresql-tukula.alwaysdata.net
+      - DB_PORT=5432
+      - DB_DATABASE=tukula_db
+      - DB_USERNAME=tukula_codespace
+      - DB_PASSWORD=@tukula2025
+      - APP_KEY=${APP_KEY}
+    entrypoint: ["/var/www/entrypoint.sh"]
+
+  nginx:
+    image: nginx:alpine
+    container_name: tukula_api_nginx
+    ports:
+      - "8000:80"
+    volumes:
+      - .:/var/www
+      - ./docker/nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app
+
+volumes:
+  app_data:
