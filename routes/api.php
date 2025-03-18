@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\LoginController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -25,4 +26,9 @@ Route::middleware('web')->prefix('v01')->group(function () {
         Route::get('/google/callback', [LoginController::class, 'handleGoogleCallback']);
     });
 
+    // Nova rota para buscar os dados do usuário autenticado
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::get('user', [AuthController::class, 'getAuthenticatedUser']);
+        Route::get('logout', [AuthController::class, 'logout']);
+    });
 });
