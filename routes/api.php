@@ -20,10 +20,16 @@ Route::middleware('web')->prefix('v01')->group(function () {
     # -----------------------
     # AUTHENTICATION
     # -----------------------
+
+
+
     Route::prefix('auth')->group(function () {
         # OAUTH2    
         Route::get('/google', [LoginController::class, 'redirectToGoogle'])->name('auth.google');
         Route::get('/google/callback', [LoginController::class, 'handleGoogleCallback']);
+
+        Route::get('register', [AuthController::class, 'register']); // Nova rota para registro
+        Route::get('login', [AuthController::class, 'login']); // Nova rota para login
     });
 
     // Nova rota para buscar os dados do usuário autenticado
