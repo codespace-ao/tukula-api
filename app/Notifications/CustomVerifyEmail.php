@@ -34,12 +34,13 @@ class CustomVerifyEmail extends Notification
 
         return (new MailMessage)
             ->subject('Verifique seu E-mail - Tukula')
-            ->greeting('Olá ' . $this->user->name . '!')
-            ->line('Obrigado por se registrar no Tukula. Clique no botão abaixo para verificar seu e-mail.')
+            ->greeting('Olá, Amigo da Tukula! 🌱')
+            ->line('Clique abaixo para verificar seu e-mail e junte-se à nossa missão! 🌍')
             ->action('Verificar E-mail', $verificationUrl)
-            ->line('Este link expirará em ' . config('auth.verification.expire', 60) . ' minutos.')
+            ->success('Seu e-mail será essencial para nossa causa!')
+            ->line('Verifique antes que o link expire! ⚠️')
             ->line('Se você não criou uma conta, ignore este e-mail.')
-            ->salutation('Atenciosamente, Equipe Tukula');
+            ->salutation('Com Carinho, Equipe Tukula 💚');
     }
 
     public function toText($notifiable)
@@ -50,6 +51,6 @@ class CustomVerifyEmail extends Notification
             ['id' => $this->user->id, 'hash' => sha1($this->user->getEmailForVerification())]
         );
 
-        return "Tukula\n\nOlá " . ($this->user->name ?? 'amigo') . ",\n\nObrigado por se juntar à Tukula! Estamos felizes por você fazer parte da nossa missão de combater o desperdício alimentar e promover sustentabilidade.\n\nPor favor, verifique seu e-mail clicando no link abaixo:\n" . $verificationUrl . "\n\nEste link expirará em " . config('auth.verification.expire', 60) . " minutos.\n\nSe você não solicitou isso, por favor, ignore este e-mail. Juntos, podemos fazer a diferença!\n\nCom carinho,\nEquipe Tukula\n\n© " . date('Y') . " Tukula. Desinscrever-se: " . config('app.url') . "/unsubscribe";
+        return "Tukula\n\nOlá, Amigo da Tukula! 🌿\n\nClique abaixo para verificar seu e-mail e junte-se à nossa missão! 🌍\n" . $verificationUrl . "\n\nSe tiver dificuldades, copie o link: " . $verificationUrl . " 🚀\n\nSe você não criou uma conta, ignore este e-mail. 🚫\n\nCom Carinho,\nEquipe Tukula 💚";
     }
 }

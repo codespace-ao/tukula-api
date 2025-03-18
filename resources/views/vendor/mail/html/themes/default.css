@@ -11,7 +11,7 @@ body *:not(html):not(style):not(br):not(tr):not(code) {
 body {
     -webkit-text-size-adjust: none;
     background-color: #222222; /* Verde Claro (#75BE43) para sustentabilidade */
-    color: #222222; /* Preto (#222222) para legibilidade */
+    color: #ffffff7c; /* Preto (#222222) para legibilidade */
     height: 100%;
     line-height: 1.4;
     margin: 0;
@@ -28,7 +28,7 @@ blockquote {
 }
 
 a {
-    color: #222222; /* Verde Claro (#75BE43) para esperança */
+    color: #ebe5e5; /* Verde Claro (#75BE43) para esperança */
 }
 
 a img {
@@ -38,7 +38,7 @@ a img {
 /* Typography */
 
 h1 {
-    color: #222222; /* Preto (#222222) para impacto */
+    color: #ffffff7c; /* Preto (#222222) para impacto */
     font-size: 18px;
     font-weight: bold;
     margin-top: 0;
@@ -124,8 +124,8 @@ img {
     -premailer-cellspacing: 0;
     -premailer-width: 100%;
     background-color: #222222; /* Verde Claro (#75BE43) */
-    border-bottom: 1px solid #222222; /* Verde Claro (#75BE43) */
-    border-top: 1px solid #222222; /* Verde Claro (#75BE43) */
+    border-bottom: 1px solid #75BE43; /* Verde Claro (#75BE43) */
+    border-top: 1px solid #F5C842; /* Verde Claro (#75BE43) */
     margin: 0;
     padding: 0;
     width: 100%;
@@ -135,11 +135,11 @@ img {
     -premailer-cellpadding: 0;
     -premailer-cellspacing: 0;
     -premailer-width: 570px;
-    background-color: #75BE43; /* Branco (#FFFFFF) para clareza */
-    border-color: #75BE43; /* Verde Claro (#75BE43) */
-    border-radius: 5px; /* Bordas suaves */
+    background-color: #222222; /* Branco (#FFFFFF) para clareza */
+    border-color: #222222; /* Verde Claro (#75BE43) */
+    border-radius: 8px; /* Bordas suaves */
     border-width: 1px;
-    box-shadow: 0 2px 0 rgba(234, 236, 231, 0.025), 2px 4px 0 rgba(54, 54, 53, 0.015); /* Sombra com verde */
+    box-shadow: 0 2px 0 rgba(100, 100, 100, 0.025), 2px 4px 0 rgba(37, 37, 37, 0.015); /* Sombra com verde */
     margin: 0 auto;
     padding: 0;
     width: 570px;
@@ -174,7 +174,7 @@ img {
 }
 
 .footer p {
-    color: #ffffff; /* Cinza (#808841) para conscientização */
+    color: #ffffff7c; /* Cinza (#808841) para conscientização */
     font-size: 12px;
     text-align: center;
 }
@@ -201,7 +201,7 @@ img {
 }
 
 .table td {
-    color: #222222; /* Preto (#222222) para legibilidade */
+    color: #ffffff7c; /* Preto (#222222) para legibilidade */
     font-size: 15px;
     line-height: 18px;
     margin: 0;
@@ -229,7 +229,8 @@ img {
 .button {
     -webkit-text-size-adjust: none;
     border-radius: 4px;
-    color: #222222; /* Preto (#222222) para contraste */
+    font-weight: bold;
+    color: #ffffff; /* Preto (#222222) para contraste */
     display: inline-block;
     overflow: hidden;
     text-decoration: none;
@@ -237,11 +238,11 @@ img {
 
 .button-blue,
 .button-primary {
-    background-color: #F5C842; /* Amarelo Suave (#F5C842) para energia */
-    border-bottom: 8px solid #F5C842;
-    border-left: 18px solid #F5C842;
-    border-right: 18px solid #F5C842;
-    border-top: 8px solid #F5C842;
+    background-color: #75BE43; /* Amarelo Suave (#F5C842) para energia */
+    border-bottom: 8px solid #75BE43;
+    border-left: 18px solid #75BE43;
+    border-right: 18px solid #75BE43;
+    border-top: 8px solid #75BE43;
 }
 
 .button-green,
@@ -271,12 +272,12 @@ img {
 
 .panel-content {
     background-color: #F7F7F7; /* Tom claro inspirado na natureza */
-    color: #222222; /* Preto (#222222) */
+    color: #ffffff7c; /* Preto (#222222) */
     padding: 16px;
 }
 
 .panel-content p {
-    color: #222222; /* Preto (#222222) */
+    color: #ffffff7c; /* Preto (#222222) */
 }
 
 .panel-item {
