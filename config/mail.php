@@ -108,9 +108,15 @@ return [
     |
     */
 
+    'driver' => env('MAIL_MAILER', 'smtp'),
+    'host' => env('MAIL_HOST', 'mx1.angohost.it.ao'),
+    'port' => env('MAIL_PORT', 465),
+    'username' => env('MAIL_USERNAME', 'no-reply@codespace.it.ao'),
+    'password' => env('MAIL_PASSWORD', 'LsB44d&6gM'),
+    'encryption' => env('MAIL_ENCRYPTION', 'ssl'),
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
-        'name' => env('MAIL_FROM_NAME', 'Example'),
+        'address' => env('MAIL_FROM_ADDRESS', 'no-reply@codespace.it.ao'),
+        'name' => env('MAIL_FROM_NAME', 'Tukula'),
     ],
 
 ];

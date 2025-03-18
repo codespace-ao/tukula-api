@@ -5,11 +5,34 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
+
+    public function verifyEmail($id, $hash)
+    {
+        $user = User::findOrFail($id);
+
+        if (! hash_equals((string) $hash, sha1($user->getEmailForVerification()))) {
+            return response()->json(['error' => 'Link de verificação inválido'], 400);
+        }
+
+        if ($user->markEmailAsVerified()) {
+            // Gera o token após a verificação
+            $token = $user->createToken('API Token')->plainTextToken;
+
+            return response()->json([
+                'message' => 'E-mail verificado com sucesso',
+                'token' => $token,
+                'user' => $user,
+            ], 200);
+        }
+
+        return response()->json(['error' => 'Erro ao verificar o e-mail'], 500);
+    }
 
     public function register(Request $request)
     {
@@ -27,20 +50,19 @@ class AuthController extends Controller
             ], 422);
         }
 
-        // Criação do usuário
+        // Criação do usuário com e-mail não verificado
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'email_verified_at' => now()
         ]);
 
-        // Gera o token de autenticação
-        $token = $user->createToken('API Token')->plainTextToken;
+        // Envia o e-mail de verificação
+        $user->sendEmailVerificationNotification();
 
         return response()->json([
-            'message' => 'Usuário registrado com sucesso',
-            'token' => $token,
+            'message' => 'Usuário registrado com sucesso! Verifique seu e-mail para ativar a conta.',
+            'user' => $user,
         ], 201);
     }
 

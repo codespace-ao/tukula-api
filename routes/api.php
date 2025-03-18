@@ -21,6 +21,10 @@ Route::middleware('web')->prefix('v01')->group(function () {
     # AUTHENTICATION
     # -----------------------
 
+    // Rota para verificar e-mail
+    Route::get('/email/verify/{id}/{hash}', [AuthController::class, 'verifyEmail'])
+        ->middleware(['signed', 'throttle:6,1'])
+        ->name('verification.verify');
 
 
     Route::prefix('auth')->group(function () {
