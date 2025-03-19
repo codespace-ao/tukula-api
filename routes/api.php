@@ -35,7 +35,7 @@ Route::middleware('web')->prefix('v01')->group(function () {
         Route::get('register', [AuthController::class, 'register']); // Nova rota para registro
         Route::get('login', [AuthController::class, 'login']); // Nova rota para login
 
-        Route::get('/reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
+        Route::get('/reset-password', [AuthController::class, 'resetPassword'])->name('password.reset');
         Route::get('/forgot-password', [AuthController::class, 'forgotPassword'])->name('password.email');
     });
 
