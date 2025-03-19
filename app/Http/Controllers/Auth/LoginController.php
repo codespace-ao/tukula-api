@@ -34,12 +34,18 @@ class LoginController extends Controller
 
             $token = $user->createToken('API Token')->plainTextToken; // Use Laravel Sanctum ou Passport
             return response()->json([
-                'message' => 'Login bem-sucedido',
-                'token' => $token
+                'status' => 'success',
+                'message' => 'Login successful',
+                'data' => [
+                    'token' => $token
+                ]
             ], 200);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Erro ao autenticar'], 500);
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Error authenticating',
+                'errors' => ['authentication' => ['An error occurred during authentication.']]
+            ], 500);
         }
     }
-    
 }

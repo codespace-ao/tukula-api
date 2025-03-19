@@ -12,32 +12,34 @@ use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
-
-    public function verifyEmail($id, $hash)
+    public function verifyEmail($id, $hash, Request $request)
     {
         $user = User::findOrFail($id);
 
-        if (! hash_equals((string) $hash, sha1($user->getEmailForVerification()))) {
-            return response()->json(['error' => 'Link de verificação inválido'], 400);
+        if (!hash_equals((string)$hash, sha1($user->getEmailForVerification()))) {
+            // Redireciona para o frontend com uma mensagem de erro (ex.: usando query params)
+            return redirect()->away(
+                env('FRONTEND_URL', 'http://localhost:3000') . '/email-verification?status=error&message=Invalid verification link'
+            );
         }
 
         if ($user->markEmailAsVerified()) {
-            // Gera o token após a verificação
             $token = $user->createToken('API Token')->plainTextToken;
 
-            return response()->json([
-                'message' => 'E-mail verificado com sucesso',
-                'token' => $token,
-                'user' => $user,
-            ], 200);
+            // Redireciona para o frontend com o token e mensagem de sucesso
+            return redirect()->away(
+                env('FRONTEND_URL', 'http://localhost:3000') . '/email-verification?status=success&message=Email verified successfully&token=' . $token
+            );
         }
 
-        return response()->json(['error' => 'Erro ao verificar o e-mail'], 500);
+        // Redireciona para o frontend com uma mensagem de erro
+        return redirect()->away(
+            env('FRONTEND_URL', 'http://localhost:3000') . '/email-verification?status=error&message=Error verifying email'
+        );
     }
 
     public function register(Request $request)
     {
-        // Validação dos dados
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
@@ -46,41 +48,40 @@ class AuthController extends Controller
 
         if ($validator->fails()) {
             return response()->json([
-                'error' => 'Erro de validação',
-                'messages' => $validator->errors(),
+                'status' => 'error',
+                'message' => 'Validation error',
+                'errors' => $validator->errors()
             ], 422);
         }
 
-        // Criação do usuário com e-mail não verificado
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
 
-        // Envia o e-mail de verificação
         $user->sendEmailVerificationNotification();
 
         return response()->json([
-            'message' => 'Usuário registrado com sucesso! Verifique seu e-mail para ativar a conta.',
-            'user' => $user,
+            'status' => 'success',
+            'message' => 'User registered successfully! Verify your email to activate your account.',
+            'data' => ['user' => $user]
         ], 201);
     }
 
     public function getAuthenticatedUser(Request $request)
     {
-        // O middleware 'auth:sanctum' já garante que o usuário está autenticado
         $user = $request->user();
 
         return response()->json([
-            'message' => 'Dados do usuário recuperados com sucesso',
-            'user' => $user,
+            'status' => 'success',
+            'message' => 'User data retrieved successfully',
+            'data' => ['user' => $user]
         ], 200);
     }
 
     public function login(Request $request)
     {
-        // Validação dos dados
         $validator = Validator::make($request->all(), [
             'email' => 'required|string|email',
             'password' => 'required|string',
@@ -88,35 +89,38 @@ class AuthController extends Controller
 
         if ($validator->fails()) {
             return response()->json([
-                'error' => 'Erro de validação',
-                'messages' => $validator->errors(),
+                'status' => 'error',
+                'message' => 'Validation error',
+                'errors' => $validator->errors()
             ], 422);
         }
 
-        // Verifica as credenciais
         if (!auth()->attempt($request->only('email', 'password'))) {
             return response()->json([
-                'error' => 'Credenciais inválidas',
+                'status' => 'error',
+                'message' => 'Invalid credentials',
+                'errors' => ['auth' => ['Email or password is incorrect.']]
             ], 401);
         }
 
-        // Gera o token para o usuário autenticado
         $user = auth()->user();
         $token = $user->createToken('API Token')->plainTextToken;
 
         return response()->json([
-            'message' => 'Login bem-sucedido',
-            'token' => $token,
+            'status' => 'success',
+            'message' => 'Login successful',
+            'data' => ['token' => $token]
         ], 200);
     }
 
     public function logout(Request $request)
     {
-        // Revoga o token atual do usuário autenticado
         $request->user()->tokens()->delete();
 
         return response()->json([
-            'message' => 'Logout bem-sucedido',
+            'status' => 'success',
+            'message' => 'Logout successful',
+            'data' => null
         ], 200);
     }
 
@@ -124,13 +128,19 @@ class AuthController extends Controller
     {
         $request->validate(['email' => 'required|email']);
 
-        $status = Password::sendResetLink(
-            $request->only('email')
-        );
+        $status = Password::sendResetLink($request->only('email'));
 
         return $status === Password::RESET_LINK_SENT
-            ? response()->json(['message' => 'Link de redefinição enviado! ✅'])
-            : response()->json(['error' => __($status)], 400);
+            ? response()->json([
+                'status' => 'success',
+                'message' => 'Reset link sent successfully',
+                'data' => null
+            ], 200)
+            : response()->json([
+                'status' => 'error',
+                'message' => 'Error sending reset link',
+                'errors' => ['email' => [__($status)]]
+            ], 400);
     }
 
     public function resetPassword(Request $request)
@@ -149,7 +159,15 @@ class AuthController extends Controller
         );
 
         return $status === Password::PASSWORD_RESET
-            ? response()->json(['message' => 'Senha redefinida com sucesso! 🎉'])
-            : response()->json(['error' => __($status)], 400);
+            ? response()->json([
+                'status' => 'success',
+                'message' => 'Password reset successfully',
+                'data' => null
+            ], 200)
+            : response()->json([
+                'status' => 'error',
+                'message' => 'Error resetting password',
+                'errors' => ['reset' => [__($status)]]
+            ], 400);
     }
 }
